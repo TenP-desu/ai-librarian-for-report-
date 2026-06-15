@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   ArrowLeft,
@@ -1832,12 +1832,13 @@ export default function Home() {
   }
 
   return (
-    <main className="shell">
-      <aside className="historyPane" aria-label={text.history}>
+    <main className={activeStep === 0 ? "shell homeShell" : "shell"}>
+      <aside className="historyPane appSidebar" aria-label={text.history}>
         <div className="paneHeader">
           <div className="appGlyph miniGlyph" aria-hidden="true" />
           <div>
             <h1>AI Report Builder</h1>
+            <p>{selectedOutputLanguage === "ja" ? "レポート作成支援AI" : "Report writing assistant"}</p>
           </div>
         </div>
 
@@ -1858,6 +1859,7 @@ export default function Home() {
           </button>
         </div>
 
+        <section className="sidebarSection">
         <div className="historyTitle">
           <History size={17} />
           <span>{text.history}</span>
@@ -1890,6 +1892,7 @@ export default function Home() {
             ))
           )}
         </div>
+        </section>
         <nav className="legalLinks sidebarLegalLinks" aria-label="Legal links">
           {legalLinks.map((link) => (
             <a href={legalHref(link.href)} key={link.href}>{selectedOutputLanguage === "ja" ? link.labelJa : link.labelEn}</a>
@@ -1898,7 +1901,7 @@ export default function Home() {
       </aside>
 
       <section className="workspace">
-        <div className="workspaceTop">
+        {activeStep > 0 && <div className="workspaceTop">
           <div>
             <p className="eyebrow">{activeGuide.eyebrow}</p>
             <h2>{activeGuide.title}</h2>
@@ -1909,9 +1912,9 @@ export default function Home() {
               {selectedOutputLanguage === "ja" ? "前のステップへ" : "Previous step"}
             </button>
           )}
-        </div>
+        </div>}
 
-        <nav className="stepRail stepRailButtons" aria-label={text.stepAria}>
+        <nav className={activeStep === 0 ? "stepRail stepRailButtons homeStepRail" : "stepRail stepRailButtons"} aria-label={text.stepAria}>
           {guideSteps.map((step) => (
             <button className={step.id === activeStep ? "stepPill active" : step.done ? "stepPill done" : "stepPill"} key={step.id} type="button" onClick={() => setActiveStep(step.id)}>
               {step.done && <CheckCircle2 size={15} />}
@@ -1929,35 +1932,53 @@ export default function Home() {
 
         {activeStep === 0 && (
           <section className="topicHero" aria-label={selectedOutputLanguage === "ja" ? "レポートテーマ入力" : "Report theme input"}>
-            <label className="topicHeroField" htmlFor="topic">
-              <span>{selectedOutputLanguage === "ja" ? "レポートのテーマを入力してください。" : "Enter your report theme."}</span>
-              <div>
-                <input
-                  id="topic"
-                  value={topic}
-                  onChange={(event) => setTopic(event.target.value)}
-                />
-                <button className="arrowButton" type="button" onClick={() => topic.trim() && setActiveStep(1)} aria-label={selectedOutputLanguage === "ja" ? "次の画面へ進む" : "Go to the next screen"}>
-                  <ArrowRight size={22} />
-                </button>
+            <div className="topicHeroCard">
+              <div className="topicHeroBrand">
+                <div className="appGlyph heroGlyph" aria-hidden="true" />
+                <h1>AI Report Builder</h1>
+                <p>{selectedOutputLanguage === "ja" ? "AIがレポート作成の流れを整理します。" : "Your AI-powered academic writing assistant."}</p>
               </div>
-            </label>
-            <p className="topicHeroText">
-              {selectedOutputLanguage === "ja"
-                ? "テーマを入力後、以下の手順でレポート作成を進めます。AIは下書きまでのお手伝いです。"
-                : "After entering a theme, follow these steps to build your report. AI helps you reach a draft."}
-            </p>
-            <div className="processList">
-              {guideSteps.slice(1).map((step) => (
-                <button className="processItem" key={step.id} type="button" onClick={() => setActiveStep(step.id)}>
-                  <span>{step.eyebrow}</span>
-                  <strong>{step.title}</strong>
-                </button>
-              ))}
+              <div className="languageControl topicHeroLanguage" aria-label={selectedOutputLanguage === "ja" ? "出力言語" : "Output language"}>
+                <Languages size={18} />
+                {(["ja", "en"] as const).map((language) => (
+                  <button className={selectedOutputLanguage === language ? "segmented active" : "segmented"} key={language} onClick={() => setOutputLanguage(language)} type="button">
+                    {languageLabel(language, selectedOutputLanguage)}
+                  </button>
+                ))}
+              </div>
+              <label className="topicHeroField" htmlFor="topic">
+                <span>{selectedOutputLanguage === "ja" ? "レポートのテーマを入力してください。" : "Enter your report theme."}</span>
+                <div>
+                  <input
+                    id="topic"
+                    value={topic}
+                    onChange={(event) => setTopic(event.target.value)}
+                    aria-label={selectedOutputLanguage === "ja" ? "レポートテーマ" : "Report theme"}
+                  />
+                  <button className="arrowButton" type="button" onClick={() => topic.trim() && setActiveStep(1)} aria-label={selectedOutputLanguage === "ja" ? "次の画面へ進む" : "Go to the next screen"}>
+                    <ArrowRight size={22} />
+                  </button>
+                </div>
+              </label>
+              <p className="topicHeroText">
+                {selectedOutputLanguage === "ja"
+                  ? "テーマを入れると、材料整理から下書き作成まで順番に進めます。"
+                  : "After entering a theme, follow the guided steps to build your report draft."}
+              </p>
+            </div>
+            <div className="processPanel" aria-label={selectedOutputLanguage === "ja" ? "作成ステップ" : "Creation steps"}>
+              <p>{selectedOutputLanguage === "ja" ? "次の流れで進みます" : "You will move through these steps"}</p>
+              <div className="processList">
+                {guideSteps.slice(1).map((step) => (
+                  <button className="processItem" key={step.id} type="button" onClick={() => setActiveStep(step.id)}>
+                    <span>{step.eyebrow}</span>
+                    <strong>{step.title}</strong>
+                  </button>
+                ))}
+              </div>
             </div>
           </section>
         )}
-
         {activeStep === 1 && (
           <>
         <section className="detailsPane stepPage" aria-label="Assignment details">

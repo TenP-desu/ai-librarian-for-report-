@@ -1,15 +1,16 @@
 :root {
-  --paper: #f7f3ea;
-  --surface: #fffdf8;
-  --ink: #1f2a28;
-  --muted: #65716d;
-  --line: #ded7c8;
-  --teal: #146c64;
-  --teal-soft: #d9eee8;
-  --coral: #c9543f;
-  --amber: #b67a19;
-  --moss: #5e7f45;
-  --shadow: 0 18px 48px rgba(31, 42, 40, 0.12);
+  --paper: #f8fafc;
+  --surface: rgba(255, 255, 255, 0.97);
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --teal: #0f766e;
+  --teal-soft: #d9f3ee;
+  --coral: #d06b52;
+  --amber: #b7791f;
+  --moss: #4f7f65;
+  --shadow: 0 28px 72px rgba(15, 23, 42, 0.18);
+  --panel-shadow: 0 20px 48px rgba(15, 23, 42, 0.12);
 }
 
 * {
@@ -23,7 +24,10 @@ body {
 
 body {
   margin: 0;
-  background: var(--paper);
+  background:
+    radial-gradient(circle at 18% 8%, rgba(20, 184, 166, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 18%, rgba(45, 212, 191, 0.12), transparent 28%),
+    linear-gradient(135deg, #0f172a 0%, #1e293b 44%, #0f4c4c 100%);
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -43,6 +47,11 @@ button {
   display: grid;
   grid-template-columns: minmax(260px, 320px) 1fr;
   min-height: 100vh;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.homeShell {
+  background: transparent;
 }
 
 .loginShell {
@@ -54,8 +63,8 @@ button {
 
 .loginPanel {
   width: min(100%, 520px);
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 24px;
   background: var(--surface);
   box-shadow: var(--shadow);
   display: grid;
@@ -69,14 +78,16 @@ button {
   margin: 0;
   font-size: 34px;
   line-height: 1.15;
+  color: var(--ink);
 }
 
 .appGlyph {
   width: 64px;
   height: 64px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 16px;
   background: url("/app-icon.svg") center / cover no-repeat;
+  box-shadow: 0 10px 28px rgba(13, 148, 136, 0.28);
 }
 
 .loginText {
@@ -171,8 +182,9 @@ button {
 }
 
 .historyPane {
-  border-right: 1px solid var(--line);
-  background: #f0eadf;
+  border-right: 1px solid rgba(226, 232, 240, 0.72);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px);
   padding: 22px;
   min-width: 0;
 }
@@ -181,7 +193,14 @@ button {
   display: flex;
   gap: 12px;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
+}
+
+.paneHeader p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .miniGlyph {
@@ -267,12 +286,19 @@ h1 {
   padding-top: 14px;
 }
 
+.sidebarSection {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.72);
+  padding: 12px;
+}
+
 .historyItem {
   position: relative;
   text-align: left;
   border: 1px solid var(--line);
   background: var(--surface);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 12px 34px 12px 12px;
   min-height: 72px;
   color: var(--ink);
@@ -309,10 +335,11 @@ h1 {
   align-items: center;
   gap: 9px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 14px;
   background: var(--surface);
   padding: 9px;
   margin-bottom: 18px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
 }
 
 .userBox span {
@@ -330,6 +357,13 @@ h1 {
 .workspace {
   padding: 28px clamp(20px, 4vw, 56px);
   min-width: 0;
+  background: rgba(248, 250, 252, 0.82);
+}
+
+.homeShell .workspace {
+  background: transparent;
+  display: grid;
+  align-content: start;
 }
 
 .workspaceTop {
@@ -348,24 +382,74 @@ h1 {
 }
 
 .topicHero {
-  min-height: 64vh;
+  min-height: calc(100vh - 150px);
   display: grid;
+  grid-template-columns: minmax(320px, 520px) minmax(260px, 420px);
   align-content: center;
+  align-items: start;
   justify-items: center;
-  gap: 20px;
+  gap: clamp(18px, 4vw, 42px);
   text-align: center;
 }
 
-.topicHeroField {
-  width: min(100%, 780px);
+.topicHeroCard,
+.processPanel {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: var(--shadow);
+}
+
+.topicHeroCard {
   display: grid;
-  gap: 14px;
+  justify-items: center;
+  gap: 18px;
+  padding: clamp(28px, 4vw, 48px);
+}
+
+.topicHeroBrand {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.heroGlyph {
+  width: 72px;
+  height: 72px;
+}
+
+.topicHeroBrand h1 {
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.05;
+}
+
+.topicHeroBrand p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.topicHeroLanguage {
+  width: min(100%, 360px);
+}
+
+.topicHeroLanguage .segmented {
+  flex: 1;
+}
+
+.topicHeroField {
+  width: 100%;
+  display: grid;
+  gap: 10px;
+  text-align: left;
 }
 
 .topicHeroField span {
-  font-size: clamp(26px, 4vw, 48px);
+  color: #475569;
+  font-size: 14px;
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.45;
 }
 
 .topicHeroField div {
@@ -376,48 +460,65 @@ h1 {
 
 .topicHeroField input {
   width: 100%;
-  min-height: 56px;
+  min-height: 54px;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
+  border-radius: 12px;
+  background: #f8fafc;
   color: var(--ink);
   outline-color: var(--teal);
   padding: 0 16px;
 }
 
 .topicHeroText {
-  max-width: 720px;
+  max-width: 360px;
   color: var(--muted);
-  line-height: 1.7;
+  font-size: 13px;
+  line-height: 1.65;
+  margin: 0;
 }
 
 .arrowButton {
-  min-height: 56px;
+  min-height: 54px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--teal);
+  background: linear-gradient(135deg, #0f766e, #0d9488);
   color: white;
-  box-shadow: var(--shadow);
+  box-shadow: 0 8px 22px rgba(13, 148, 136, 0.32);
+}
+
+.processPanel {
+  align-self: center;
+  padding: 22px;
+}
+
+.processPanel > p {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  text-align: left;
 }
 
 .processList {
-  width: min(100%, 560px);
+  width: 100%;
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .processItem {
   min-height: 54px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 12px;
   display: grid;
   grid-template-columns: 76px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
-  background: var(--surface);
+  background: #f8fafc;
   color: var(--ink);
   padding: 10px 14px;
   text-align: left;
@@ -499,6 +600,30 @@ h1 {
   margin: 0 0 28px;
 }
 
+.homeStepRail {
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.homeStepRail .stepPill {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  color: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(12px);
+}
+
+.homeStepRail .stepPill.active {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--teal);
+}
+
+.homeShell .safetyNotice {
+  width: min(100%, 760px);
+  margin: 0 auto 16px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
 .stepRailButtons .stepPill {
   cursor: pointer;
 }
@@ -538,12 +663,12 @@ h1 {
 .primaryButton {
   min-height: 54px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--teal);
+  background: linear-gradient(135deg, #0f766e, #0d9488);
   color: white;
   font-weight: 700;
   padding: 0 18px;
@@ -553,7 +678,7 @@ h1 {
 .secondaryButton {
   min-height: 44px;
   border: 1px solid var(--teal);
-  border-radius: 8px;
+  border-radius: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -656,8 +781,9 @@ h1 {
 .notice,
 .loadingBlock {
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 14px;
   background: var(--surface);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
 }
 
 .detailsPane,
@@ -1781,6 +1907,15 @@ code {
     border-bottom: 1px solid var(--line);
   }
 
+  .topicHero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .processPanel {
+    align-self: stretch;
+  }
+
   .historyList {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
@@ -1808,9 +1943,23 @@ code {
   }
 
   .topicHero {
-    min-height: 54vh;
+    min-height: auto;
     justify-items: stretch;
     text-align: left;
+  }
+
+  .topicHeroCard,
+  .processPanel {
+    border-radius: 18px;
+    padding: 20px;
+  }
+
+  .topicHeroBrand {
+    justify-items: start;
+  }
+
+  .topicHeroBrand h1 {
+    font-size: 32px;
   }
 
   .topicHeroField div {
