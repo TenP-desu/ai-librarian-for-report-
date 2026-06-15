@@ -103,7 +103,7 @@ type GuestUser = {
   name: string;
 };
 
-type ActiveStep = 0 | 1 | 2 | 3 | 4 | 5;
+type ActiveStep = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 type WorkflowStatus = "idle" | "material" | "points" | "pdf" | "plans" | "references" | "outline" | "draft" | "personalization" | "revision";
 
 const HISTORY_KEY = "ai-librarian-history-v3";
@@ -162,6 +162,12 @@ const LOADING_TIPS: Record<"ja" | "en", string[]> = {
     "If a plan does not fit, add conditions and recreate it."
   ]
 };
+
+function randomTipIndex(length: number, current?: number) {
+  if (length <= 1) return 0;
+  const next = Math.floor(Math.random() * length);
+  return typeof current === "number" && next === current ? (next + 1) % length : next;
+}
 
 const LOADING_TITLES: Record<"ja" | "en", Record<WorkflowStatus, string>> = {
   ja: {
@@ -253,11 +259,11 @@ const UI_TEXT = {
     readMode: "読み取り",
     mixedMode: "複数方式",
     pdfTextMode: "PDF内テキスト",
-    contentPointsSection: "2. 内容候補を選ぶ",
+    contentPointsSection: "3. 内容候補を選ぶ",
     contentPointsPlaceholder: "材料チェック後に内容候補を作ると、レポートに入れる候補が表示されます。",
     addContentPointPlaceholder: "",
     createPlan: "プランを作る",
-    planSection: "3. プランを選ぶ・編集する",
+    planSection: "4. プランを選ぶ・編集する",
     editCount: "編集",
     editCountSuffix: "回",
     refinePlanLabel: "プランをもっと自分向けに変える",
@@ -365,11 +371,11 @@ const UI_TEXT = {
     readMode: "Read mode",
     mixedMode: "Mixed methods",
     pdfTextMode: "Embedded PDF text",
-    contentPointsSection: "2. Choose Content Points",
+    contentPointsSection: "3. Choose Content Points",
     contentPointsPlaceholder: "After checking your material, create content points to see candidates for the report.",
     addContentPointPlaceholder: "",
     createPlan: "Create plan",
-    planSection: "3. Choose and Edit a Plan",
+    planSection: "4. Choose and Edit a Plan",
     editCount: "Edited",
     editCountSuffix: " times",
     refinePlanLabel: "Make the plan fit my report better",
@@ -783,18 +789,20 @@ export default function Home() {
       ? [
           { id: 0 as const, eyebrow: "テーマ", title: "レポートのテーマを決める", short: "テーマ", done: topic.trim().length > 0 },
           { id: 1 as const, eyebrow: "Step 1", title: "レポート材料の収集", short: "材料収集", done: details.assignmentPrompt.trim().length > 0 || details.mustInclude.trim().length > 0 || allPdfThemes().length > 0 },
-          { id: 2 as const, eyebrow: "Step 2", title: "内容の絞り込み", short: "内容整理", done: selectedContentPointIds.length > 0 },
-          { id: 3 as const, eyebrow: "Step 3", title: "プランを作成", short: "プラン", done: Boolean(selectedPlan) },
-          { id: 4 as const, eyebrow: "Step 4", title: "参考文献を探す", short: "参考文献", done: selectedReferenceIds.length > 0 },
-          { id: 5 as const, eyebrow: "Step 5", title: "下書きを作成", short: "下書き", done: Boolean(reportOutline || reportDraft) }
+          { id: 2 as const, eyebrow: "Step 2", title: "内容精査", short: "内容精査", done: Boolean(materialCheck) },
+          { id: 3 as const, eyebrow: "Step 3", title: "内容候補を選ぶ", short: "内容選択", done: selectedContentPointIds.length > 0 },
+          { id: 4 as const, eyebrow: "Step 4", title: "プランを作成", short: "プラン", done: Boolean(selectedPlan) },
+          { id: 5 as const, eyebrow: "Step 5", title: "参考文献を探す", short: "参考文献", done: selectedReferenceIds.length > 0 },
+          { id: 6 as const, eyebrow: "Step 6", title: "下書きを作成", short: "下書き", done: Boolean(reportOutline || reportDraft) }
         ]
       : [
           { id: 0 as const, eyebrow: "Theme", title: "Choose a report theme", short: "Theme", done: topic.trim().length > 0 },
           { id: 1 as const, eyebrow: "Step 1", title: "Collect report material", short: "Material", done: details.assignmentPrompt.trim().length > 0 || details.mustInclude.trim().length > 0 || allPdfThemes().length > 0 },
-          { id: 2 as const, eyebrow: "Step 2", title: "Narrow the content", short: "Narrow", done: selectedContentPointIds.length > 0 },
-          { id: 3 as const, eyebrow: "Step 3", title: "Create a plan", short: "Plan", done: Boolean(selectedPlan) },
-          { id: 4 as const, eyebrow: "Step 4", title: "Find references", short: "References", done: selectedReferenceIds.length > 0 },
-          { id: 5 as const, eyebrow: "Step 5", title: "Create a draft", short: "Draft", done: Boolean(reportOutline || reportDraft) }
+          { id: 2 as const, eyebrow: "Step 2", title: "Review material", short: "Review", done: Boolean(materialCheck) },
+          { id: 3 as const, eyebrow: "Step 3", title: "Choose content points", short: "Points", done: selectedContentPointIds.length > 0 },
+          { id: 4 as const, eyebrow: "Step 4", title: "Create a plan", short: "Plan", done: Boolean(selectedPlan) },
+          { id: 5 as const, eyebrow: "Step 5", title: "Find references", short: "References", done: selectedReferenceIds.length > 0 },
+          { id: 6 as const, eyebrow: "Step 6", title: "Create a draft", short: "Draft", done: Boolean(reportOutline || reportDraft) }
         ];
   const activeGuide = guideSteps.find((step) => step.id === activeStep) ?? guideSteps[0];
   const busyMessage = STATUS_MESSAGES[selectedOutputLanguage][status];
@@ -823,9 +831,9 @@ export default function Home() {
       return;
     }
 
-    setLoadingTipIndex(0);
+    setLoadingTipIndex(randomTipIndex(loadingTips.length));
     const intervalId = window.setInterval(() => {
-      setLoadingTipIndex((current) => (current + 1) % loadingTips.length);
+      setLoadingTipIndex((current) => randomTipIndex(loadingTips.length, current));
     }, 8000);
 
     return () => window.clearInterval(intervalId);
@@ -1347,8 +1355,8 @@ export default function Home() {
       return;
     }
 
+    setActiveStep(3);
     await suggestContentPoints();
-    setActiveStep(2);
   }
 
   async function createPlansAndContinue() {
@@ -1358,12 +1366,12 @@ export default function Home() {
     }
 
     await getPlans("initial");
-    setActiveStep(3);
+    setActiveStep(4);
   }
 
   async function findReferencesAndContinue(plan: ThemeCandidate) {
     await getReferences(plan);
-    setActiveStep(4);
+    setActiveStep(5);
   }
 
   async function readPdf(avoidThemes: string[] = []) {
@@ -1705,7 +1713,7 @@ export default function Home() {
     setReportDraft(null);
     clearRevisionFlow();
     setError(undefined);
-    setActiveStep(4);
+    setActiveStep(5);
   }
 
   function togglePdfTheme(themeId: string) {
@@ -2095,8 +2103,8 @@ export default function Home() {
           </>
         )}
 
-        {(activeStep === 2 || activeStep === 3) && (
-        <div className={activeStep === 2 ? "workflowGrid stepFocusGrid" : "workflowGrid planStageGrid"}>
+        {(activeStep === 2 || activeStep === 3 || activeStep === 4) && (
+        <div className={activeStep === 2 ? "workflowGrid stepFocusGrid" : activeStep === 3 ? "workflowGrid contentSelectionGrid" : "workflowGrid planStageGrid"}>
           {activeStep === 2 && (
           <section className="analysisPane" aria-label={selectedOutputLanguage === "ja" ? "材料の分析結果" : "Material analysis"}>
             <div className="sectionHeader">
@@ -2184,7 +2192,7 @@ export default function Home() {
           </section>
           )}
 
-          {activeStep === 2 && (
+          {activeStep === 3 && (
           <section className="contentPointsPane" aria-label={text.contentPointsSection}>
             <div className="sectionHeader">
               <MessageSquareText size={18} />
@@ -2221,7 +2229,7 @@ export default function Home() {
           </section>
           )}
 
-          {activeStep === 3 && (
+          {activeStep === 4 && (
           <section aria-label={text.planSection}>
             <div className="sectionHeader">
               <BookOpen size={18} />
@@ -2295,11 +2303,11 @@ export default function Home() {
         </div>
         )}
 
-        {activeStep === 4 && (
+        {activeStep === 5 && (
         <section className="referencesPane stepPage" aria-label="参考文献">
           <div className="sectionHeader">
             <Library size={18} />
-            <h2>{selectedOutputLanguage === "ja" ? "4. 参考文献を選ぶ" : "4. Choose References"}</h2>
+            <h2>{selectedOutputLanguage === "ja" ? "5. 参考文献を選ぶ" : "5. Choose References"}</h2>
             {selectedPlan && <span className="selectedChip">{selectedPlan.title}</span>}
           </div>
           <div className="materialCheckBox">
@@ -2475,7 +2483,7 @@ export default function Home() {
             <button
               className="primaryButton"
               type="button"
-              onClick={() => setActiveStep(5)}
+              onClick={() => setActiveStep(6)}
               disabled={selectedReferenceIds.length === 0 && selectedPdfThemes().length === 0 && selectedContentPoints().length === 0}
             >
               <ArrowRight size={18} />
@@ -2485,11 +2493,11 @@ export default function Home() {
         </section>
         )}
 
-        {activeStep === 5 && selectedPlan && (references.length > 0 || selectedPdfThemes().length > 0 || selectedContentPoints().length > 0) && (
+        {activeStep === 6 && selectedPlan && (references.length > 0 || selectedPdfThemes().length > 0 || selectedContentPoints().length > 0) && (
           <section className="outlinePane stepPage" aria-label="構成案">
             <div className="sectionHeader">
               <ListChecks size={18} />
-              <h2>5. 構成案・下書きを作る</h2>
+              <h2>6. 構成案・下書きを作る</h2>
               <span className="selectedChip">
                 {selectedReferenceIds.length > 0 ? `${selectedReferenceIds.length}件の論文を選択中` : selectedPdfThemes().length > 0 ? "PDF中心" : "内容候補中心"}
               </span>

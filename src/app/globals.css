@@ -47,7 +47,7 @@ button {
   display: grid;
   grid-template-columns: minmax(260px, 320px) 1fr;
   min-height: 100vh;
-  background: rgba(248, 250, 252, 0.92);
+  background: transparent;
 }
 
 .homeShell {
@@ -357,7 +357,7 @@ h1 {
 .workspace {
   padding: 28px clamp(20px, 4vw, 56px);
   min-width: 0;
-  background: rgba(248, 250, 252, 0.82);
+  background: transparent;
 }
 
 .homeShell .workspace {
@@ -724,6 +724,10 @@ h1 {
 }
 
 .planStageGrid {
+  grid-template-columns: minmax(0, 960px);
+}
+
+.contentSelectionGrid {
   grid-template-columns: minmax(0, 960px);
 }
 
@@ -1898,7 +1902,8 @@ code {
   .draftControls,
   .searchBand,
   .workspaceTop,
-  .stepFocusGrid {
+  .stepFocusGrid,
+  .contentSelectionGrid {
     grid-template-columns: 1fr;
   }
 
