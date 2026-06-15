@@ -376,9 +376,10 @@ h1 {
 
 .workspaceTop h2 {
   margin: 0;
-  color: var(--teal);
+  color: #f8fafc;
   font-size: clamp(26px, 3.8vw, 46px);
   line-height: 1.1;
+  text-shadow: 0 2px 14px rgba(15, 23, 42, 0.28);
 }
 
 .topicHero {
@@ -747,11 +748,56 @@ h1 {
 
 .sectionHeader {
   margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .sectionHeader h2 {
   margin: 0;
   font-size: 18px;
+  color: #f8fafc;
+  text-shadow: 0 2px 12px rgba(15, 23, 42, 0.24);
+}
+
+.sectionHeader h3 {
+  color: #f8fafc;
+  text-shadow: 0 2px 12px rgba(15, 23, 42, 0.24);
+}
+
+.analysisPane .sectionHeader,
+.questionsPane .sectionHeader,
+.contentPointsPane .sectionHeader,
+.draftBox .sectionHeader,
+.draftResult .sectionHeader,
+.outlineResult .sectionHeader,
+.personalizationBox .sectionHeader,
+.revisedResult .sectionHeader,
+.pdfResult .sectionHeader,
+.materialCheckBox .sectionHeader {
+  color: var(--teal);
+}
+
+.analysisPane .sectionHeader h2,
+.questionsPane .sectionHeader h2,
+.contentPointsPane .sectionHeader h2,
+.draftBox .sectionHeader h2,
+.draftResult .sectionHeader h2,
+.outlineResult .sectionHeader h2,
+.personalizationBox .sectionHeader h2,
+.revisedResult .sectionHeader h2,
+.pdfResult .sectionHeader h2,
+.materialCheckBox .sectionHeader h2,
+.analysisPane .sectionHeader h3,
+.questionsPane .sectionHeader h3,
+.contentPointsPane .sectionHeader h3,
+.draftBox .sectionHeader h3,
+.draftResult .sectionHeader h3,
+.outlineResult .sectionHeader h3,
+.personalizationBox .sectionHeader h3,
+.revisedResult .sectionHeader h3,
+.pdfResult .sectionHeader h3,
+.materialCheckBox .sectionHeader h3 {
+  color: var(--ink);
+  text-shadow: none;
 }
 
 .selectedChip {
