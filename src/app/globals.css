@@ -614,15 +614,15 @@ h1 {
 }
 
 .homeStepRail .stepPill {
-  border-color: rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.13);
-  color: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(12px);
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+  backdrop-filter: none;
 }
 
 .homeStepRail .stepPill.active {
-  border-color: rgba(255, 255, 255, 0.42);
-  background: rgba(255, 255, 255, 0.96);
+  border-color: var(--teal);
+  background: transparent;
   color: var(--teal);
 }
 
@@ -911,6 +911,19 @@ h1 {
   padding: 0 12px;
 }
 
+.preferenceTextArea {
+  width: 100%;
+  min-height: 96px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f8fafc;
+  color: var(--ink);
+  outline-color: var(--teal);
+  padding: 12px;
+  resize: vertical;
+  margin-top: 10px;
+}
+
 .preferenceChip {
   display: inline-flex;
   align-items: center;
@@ -935,6 +948,11 @@ h1 {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
+}
+
+.materialCheckAction {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .materialCheckBox strong {
@@ -1007,6 +1025,18 @@ h1 {
   color: var(--moss);
   line-height: 1.5;
   margin-top: 8px;
+}
+
+.analysisDetail ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.analysisDetail li {
+  color: var(--ink);
+  line-height: 1.55;
 }
 
 .materialScore {
@@ -1112,6 +1142,14 @@ h1 {
   border-radius: 8px;
   background: var(--surface);
   padding: 14px;
+}
+
+.pdfHint {
+  flex: 1 1 100%;
+  margin: -2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .inlineToggle {
@@ -1310,6 +1348,13 @@ h1 {
   color: var(--muted);
   font-size: 13px;
   font-weight: 700;
+}
+
+.planActionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
 }
 
 .quickEditRow {

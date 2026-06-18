@@ -221,7 +221,7 @@ const UI_TEXT = {
     loginStart: "始める",
     termsConsent: "利用規約、プライバシーポリシーを確認し、大学や授業のAI利用ルールに従うことに同意します。",
     termsRequired: "始める前に規約と安全ガイドへの同意が必要です。",
-    safetyNotice: "AIは下書き補助です。提出前に内容・引用・大学のルールを必ず自分で確認してください。",
+    safetyNotice: "提出前に内容・引用・大学のルールを必ず自分で確認してください。",
     pdfUploadNotice: "権限のあるPDFだけをアップロードしてください。授業資料、有料論文、個人情報を含む資料は、利用許可を確認してから使ってください。",
     draftSafetyNotice: "下書きはそのまま提出せず、自分の言葉で修正し、引用・ページ番号・参考文献を確認してください。",
     citationSafetyNotice: "引用形式は補助表示です。提出前に授業指定の形式と原文のページ番号を確認してください。",
@@ -244,17 +244,18 @@ const UI_TEXT = {
     addPreferencePlaceholder: "",
     add: "追加",
     materialCheck: "材料チェック",
-    materialCheckHelp: "プランを作る前に、テーマ・意見・材料が十分に具体的か確認します。",
-    runCheck: "チェックする",
+    materialCheckHelp: "",
+    runCheck: "材料チェック",
     materialWeaknesses: "もう少し具体化したい点",
     recommendedDirection: "おすすめの方向性",
     quickQuestions: "追加質問",
     chooseOption: "選択してください",
     additionalMaterial: "追加できる材料",
     addSelectedMaterial: "選んだ材料を追加",
-    pdfSection: "PDFを読み込む（任意・3件まで）",
+    pdfSection: "PDFを読み込む",
     pdfLimitError: "PDFは3件まで選択できます。",
-    pdfOcr: "スキャンPDFはOCRで読む",
+    pdfOcr: "OCRで読み込む",
+    pdfOcrHelp: "画像やイラストが多い場合はOCRで読み込んでください。",
     readPdf: "PDFを読む",
     reExtractPdf: "別の観点で再抽出",
     readMode: "読み取り",
@@ -333,7 +334,7 @@ const UI_TEXT = {
     loginStart: "Start",
     termsConsent: "I have reviewed the Terms and Privacy Policy, and I agree to follow my university and course AI rules.",
     termsRequired: "You need to accept the terms and safety guide before starting.",
-    safetyNotice: "AI only helps with drafting. Before submission, check the content, citations, and university rules yourself.",
+    safetyNotice: "Before submission, check the content, citations, and university rules yourself.",
     pdfUploadNotice: "Upload only PDFs you are allowed to use. Check permission before using course materials, paid papers, or files containing personal information.",
     draftSafetyNotice: "Do not submit the draft as-is. Revise it in your own words and check citations, page numbers, and references.",
     citationSafetyNotice: "Citation styles are assistive. Before submission, verify the required course style and original page numbers.",
@@ -356,17 +357,18 @@ const UI_TEXT = {
     addPreferencePlaceholder: "",
     add: "Add",
     materialCheck: "Material Check",
-    materialCheckHelp: "Before creating a plan, check whether the topic, opinion, and material are concrete enough.",
-    runCheck: "Check",
+    materialCheckHelp: "",
+    runCheck: "Material Check",
     materialWeaknesses: "Points to make more specific",
     recommendedDirection: "Recommended direction",
     quickQuestions: "Additional questions",
     chooseOption: "Choose an option",
     additionalMaterial: "Material you can add",
     addSelectedMaterial: "Add selected material",
-    pdfSection: "Read PDFs (optional, up to 3)",
+    pdfSection: "Read PDFs",
     pdfLimitError: "You can select up to 3 PDFs.",
-    pdfOcr: "Use OCR for scanned PDFs",
+    pdfOcr: "Read with OCR",
+    pdfOcrHelp: "If the PDF contains many images or illustrations, read it with OCR.",
     readPdf: "Read PDF",
     reExtractPdf: "Re-extract from another angle",
     readMode: "Read mode",
@@ -742,7 +744,6 @@ export default function Home() {
     reportPreferences: [],
     materialNotes: ""
   });
-  const [customPreference, setCustomPreference] = useState("");
   const [materialCheck, setMaterialCheck] = useState<MaterialQualityCheck | null>(null);
   const [materialQuestionAnswers, setMaterialQuestionAnswers] = useState<Record<string, string>>({});
   const [pdfFiles, setPdfFiles] = useState<File[]>([]);
@@ -1382,6 +1383,27 @@ export default function Home() {
     setActiveStep(5);
   }
 
+  function continueDraftWithoutReferences(plan: ThemeCandidate) {
+    setSelectedPlanId(plan.id);
+    setReferences([]);
+    setSelectedReferenceIds([]);
+    setReferencePages({});
+    setWarnings([]);
+    setAlternatives([]);
+    setRefinements([]);
+    setTotalReviewed(undefined);
+    setReportOutline(null);
+    setReportDraft(null);
+    clearRevisionFlow();
+    setError(undefined);
+    setActiveStep(6);
+    trackUsage("draft_without_references_selected", {
+      outputLanguage: selectedOutputLanguage,
+      contentPointCount: selectedContentPoints().length,
+      pdfThemeCount: selectedPdfThemes().length
+    });
+  }
+
   async function readPdf(avoidThemes: string[] = []) {
     if (pdfFiles.length === 0) {
       setError("先にPDFを選んでください。PDFは3つまで読み込めます。");
@@ -1732,14 +1754,6 @@ export default function Home() {
     setSelectedContentPointIds((current) => (current.includes(pointId) ? current.filter((id) => id !== pointId) : [...current, pointId]));
   }
 
-  function toggleReportPreference(preference: string) {
-    setDetails((current) => ({
-      ...current,
-      reportPreferences: current.reportPreferences.includes(preference) ? current.reportPreferences.filter((item) => item !== preference) : [...current.reportPreferences, preference]
-    }));
-    clearMaterialCheck();
-  }
-
   function updateMaterialAnswer(questionId: string, answer: string) {
     setMaterialQuestionAnswers((current) => ({
       ...current,
@@ -1760,18 +1774,6 @@ export default function Home() {
         [questionId]: nextValues.join("\n")
       };
     });
-  }
-
-  function addCustomPreference() {
-    const preference = customPreference.trim();
-    if (!preference) return;
-
-    setDetails((current) => ({
-      ...current,
-      reportPreferences: current.reportPreferences.includes(preference) ? current.reportPreferences : [...current.reportPreferences, preference]
-    }));
-    setCustomPreference("");
-    clearMaterialCheck();
   }
 
   function toggleReference(referenceId: string) {
@@ -2005,32 +2007,30 @@ export default function Home() {
           <div className="detailsGrid">
             <label className="questionCard">
               <span>{text.assignmentPrompt}</span>
-              <textarea value={details.assignmentPrompt} onChange={(event) => setDetails({ ...details, assignmentPrompt: event.target.value })} rows={4} />
+              <textarea value={details.assignmentPrompt} onChange={(event) => {
+                setDetails({ ...details, assignmentPrompt: event.target.value });
+                clearMaterialCheck();
+              }} rows={4} />
             </label>
             <label className="questionCard">
               <span>{text.mustInclude}</span>
-              <textarea value={details.mustInclude} onChange={(event) => setDetails({ ...details, mustInclude: event.target.value })} rows={4} />
+              <textarea value={details.mustInclude} onChange={(event) => {
+                setDetails({ ...details, mustInclude: event.target.value });
+                clearMaterialCheck();
+              }} rows={4} />
             </label>
           </div>
           <div className="preferenceBox">
             <span>{text.reportPreferences}</span>
-            <div className="preferenceGrid">
-              {REPORT_PREFERENCES.map((preference) => (
-                <label className={details.reportPreferences.includes(preference.id) ? "preferenceChip selected" : "preferenceChip"} key={preference.id}>
-                  <input type="checkbox" checked={details.reportPreferences.includes(preference.id)} onChange={() => toggleReportPreference(preference.id)} />
-                  {preference.label[selectedOutputLanguage]}
-                </label>
-              ))}
-            </div>
-            <div className="customPreferenceRow">
-              <input
-                value={customPreference}
-                onChange={(event) => setCustomPreference(event.target.value)}
-              />
-              <button className="secondaryButton compact" type="button" onClick={addCustomPreference}>
-                {text.add}
-              </button>
-            </div>
+            <textarea
+              className="preferenceTextArea"
+              value={details.materialNotes}
+              onChange={(event) => {
+                setDetails({ ...details, materialNotes: event.target.value });
+                clearMaterialCheck();
+              }}
+              rows={3}
+            />
           </div>
         </section>
 
@@ -2062,6 +2062,7 @@ export default function Home() {
               <input type="checkbox" checked={forcePdfOcr} onChange={(event) => setForcePdfOcr(event.target.checked)} />
               {text.pdfOcr}
             </label>
+            <p className="pdfHint">{text.pdfOcrHelp}</p>
             <button className="secondaryButton compact" type="button" onClick={() => readPdf()} disabled={busy || pdfFiles.length === 0}>
               {status === "pdf" ? <Loader2 size={17} className="spin" /> : <FileText size={17} />}
               {text.readPdf}
@@ -2098,11 +2099,7 @@ export default function Home() {
             </div>
           )}
         </section>
-        <div className="materialCheckBox stepPage">
-          <div>
-            <strong>{text.materialCheck}</strong>
-            {text.materialCheckHelp && <p>{text.materialCheckHelp}</p>}
-          </div>
+        <div className="materialCheckBox materialCheckAction stepPage">
           <button className="primaryButton compact" type="button" onClick={checkMaterialAndContinue} disabled={busy}>
             {status === "material" ? <Loader2 size={17} className="spin" /> : <CheckCircle2 size={17} />}
             {text.runCheck}
@@ -2138,9 +2135,11 @@ export default function Home() {
                 </div>
                 <div className="analysisDetail">
                   <strong>{text.materialWeaknesses}</strong>
-                  {materialCheck.weaknesses.map((weakness) => (
-                    <p key={weakness}>{weakness}</p>
-                  ))}
+                  <ul>
+                    {materialCheck.weaknesses.map((weakness) => (
+                      <li key={weakness}>{weakness}</li>
+                    ))}
+                  </ul>
                   {materialCheck.recommendedPreferences.length > 0 && <small>{text.recommendedDirection}: {materialCheck.recommendedPreferences.join(", ")}</small>}
                 </div>
               </div>
@@ -2300,10 +2299,16 @@ export default function Home() {
                       ))}
                     </div>
                     <p className="whyUseful">{renderMathText(plan.thesisHint)}</p>
-                    <button className="secondaryButton compact" type="button" onClick={() => findReferencesAndContinue(plan)} disabled={status === "references"}>
-                      {status === "references" && selectedPlanId === plan.id ? <Loader2 size={17} className="spin" /> : <Search size={17} />}
-                      {selectedOutputLanguage === "ja" ? "参考文献を探す" : "Find references"}
-                    </button>
+                    <div className="planActionRow">
+                      <button className="secondaryButton compact" type="button" onClick={() => findReferencesAndContinue(plan)} disabled={status === "references"}>
+                        {status === "references" && selectedPlanId === plan.id ? <Loader2 size={17} className="spin" /> : <Search size={17} />}
+                        {selectedOutputLanguage === "ja" ? "参考文献を探す" : "Find references"}
+                      </button>
+                      <button className="secondaryButton compact" type="button" onClick={() => continueDraftWithoutReferences(plan)} disabled={busy}>
+                        <ArrowRight size={17} />
+                        {selectedOutputLanguage === "ja" ? "参考文献を使用せずにレポートを作成" : "Create without references"}
+                      </button>
+                    </div>
                   </article>
                 ))
               )}
@@ -2570,12 +2575,13 @@ export default function Home() {
                 <label>
                   <span>目標語数</span>
                   <input
-                    type="number"
-                    min={300}
-                    max={5000}
-                    step={100}
+                    type="text"
+                    inputMode="numeric"
                     value={draftOptions.targetWordCount}
-                    onChange={(event) => setDraftOptions({ ...draftOptions, targetWordCount: Number(event.target.value) || 1200 })}
+                    onChange={(event) => {
+                      const wordCount = Number(event.target.value.replace(/[^\d]/g, ""));
+                      setDraftOptions({ ...draftOptions, targetWordCount: wordCount || draftOptions.targetWordCount });
+                    }}
                   />
                 </label>
                 <label>
