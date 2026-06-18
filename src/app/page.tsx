@@ -17,6 +17,7 @@ import {
   PenLine,
   RefreshCcw,
   Search,
+  Sparkles,
   Trash2,
   UserRound,
   X
@@ -694,24 +695,31 @@ function LoadingScreen({
 
   return (
     <section className="loadingScreen" aria-live="polite" aria-label={loadingLabel}>
+      <div className="loadingBubble bubbleOne" aria-hidden="true" />
+      <div className="loadingBubble bubbleTwo" aria-hidden="true" />
+      <div className="loadingBubble bubbleThree" aria-hidden="true" />
+      <div className="loadingBubble bubbleFour" aria-hidden="true" />
       <div className="loadingCard">
+        <div className="loadingGlow" aria-hidden="true" />
         <div className="loadingBrand">
-          <div className="appGlyph miniGlyph" aria-hidden="true" />
-          <span>{loadingLabel}</span>
+          <div className="loadingIcon" aria-hidden="true">
+            <Sparkles size={34} />
+          </div>
         </div>
+        <h2>AI Report Builder</h2>
+        <p className="loadingMessage">{title}</p>
         <div className="loadingTopic">
           <span>{topicLabel}</span>
           <strong>{topic.trim() || fallbackTopic}</strong>
         </div>
-        <div className="loadingProgressHeader">
-          <span>0%</span>
-          <b>{title}</b>
-          <span>100%</span>
-        </div>
         <div className="loadingProgressBar" aria-hidden="true">
           <span style={{ width: `${progress}%` }} />
         </div>
-        <p className="loadingMessage">{message}</p>
+        <div className="loadingDots" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
         <div className="loadingTip">
           <span>Tips</span>
           <p>{tip}</p>
@@ -2128,11 +2136,13 @@ export default function Home() {
                   <b>{materialCheck.score}%</b>
                   <span>{materialCheck.verdict}</span>
                 </div>
-                <strong>{text.materialWeaknesses}</strong>
-                {materialCheck.weaknesses.map((weakness) => (
-                  <p key={weakness}>{weakness}</p>
-                ))}
-                {materialCheck.recommendedPreferences.length > 0 && <small>{text.recommendedDirection}: {materialCheck.recommendedPreferences.join(", ")}</small>}
+                <div className="analysisDetail">
+                  <strong>{text.materialWeaknesses}</strong>
+                  {materialCheck.weaknesses.map((weakness) => (
+                    <p key={weakness}>{weakness}</p>
+                  ))}
+                  {materialCheck.recommendedPreferences.length > 0 && <small>{text.recommendedDirection}: {materialCheck.recommendedPreferences.join(", ")}</small>}
+                </div>
               </div>
             ) : (
               <div className="placeholderBlock">{selectedOutputLanguage === "ja" ? "Step 1でチェックすると、材料の分析結果がここに表示されます。" : "Check Step 1 to show the material analysis here."}</div>
