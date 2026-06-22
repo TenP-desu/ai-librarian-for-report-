@@ -256,6 +256,12 @@ const UI_TEXT = {
     pdfLimitError: "PDFは3件まで選択できます。",
     pdfOcr: "OCRで読み込む",
     pdfOcrHelp: "画像やイラストが多い場合はOCRで読み込んでください。",
+    choosePdfFiles: "PDFをアップロード",
+    selectedPdfCount: "選択中のPDF",
+    selectPdfFirst: "先にPDFを選んでください。PDFは3つまで読み込めます。",
+    pdfFileReadFailed: "を読み込めませんでした。",
+    pdfReadFailed: "PDFを読み込めませんでした。",
+    pdfReadAdvice: "PDFを3件以内にする、容量を15MB以内にする、またはOCRモードも試してください。",
     readPdf: "PDFを読む",
     reExtractPdf: "別の観点で再抽出",
     readMode: "読み取り",
@@ -369,6 +375,12 @@ const UI_TEXT = {
     pdfLimitError: "You can select up to 3 PDFs.",
     pdfOcr: "Read with OCR",
     pdfOcrHelp: "If the PDF contains many images or illustrations, read it with OCR.",
+    choosePdfFiles: "Upload PDFs",
+    selectedPdfCount: "Selected PDFs",
+    selectPdfFirst: "Select a PDF first. You can read up to 3 PDFs.",
+    pdfFileReadFailed: " could not be read.",
+    pdfReadFailed: "The PDF could not be read.",
+    pdfReadAdvice: "Use up to 3 PDFs, keep each file under 15 MB, or try OCR mode.",
     readPdf: "Read PDF",
     reExtractPdf: "Re-extract from another angle",
     readMode: "Read mode",
@@ -1406,7 +1418,7 @@ export default function Home() {
 
   async function readPdf(avoidThemes: string[] = []) {
     if (pdfFiles.length === 0) {
-      setError("先にPDFを選んでください。PDFは3つまで読み込めます。");
+      setError(text.selectPdfFirst);
       return;
     }
 
@@ -1432,7 +1444,7 @@ export default function Home() {
 
         if (!response.ok) {
           const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-          throw new Error(payload?.error || `${file.name}を読み込めませんでした。`);
+          throw new Error(payload?.error || `${file.name}${text.pdfFileReadFailed}`);
         }
 
         const result = (await response.json()) as PdfResponse;
@@ -1493,14 +1505,14 @@ export default function Home() {
         usedFallback: results.some((result) => result.usedFallback)
       });
     } catch (pdfError) {
-      const message = pdfError instanceof Error ? pdfError.message : "PDFを読み込めませんでした。";
+      const message = pdfError instanceof Error ? pdfError.message : text.pdfReadFailed;
       trackUsage("pdf_read_failed", {
         outputLanguage: selectedOutputLanguage,
         fileCount: pdfFiles.length,
         forceOcr: forcePdfOcr,
         additionalRead: avoidThemes.length > 0
       });
-      setError(`${message} PDFを3件以内にする、容量を15MB以内にする、またはOCRモードも試してください。`);
+      setError(`${message} ${text.pdfReadAdvice}`);
     } finally {
       setStatus("idle");
     }
@@ -2040,24 +2052,29 @@ export default function Home() {
             <h2>{text.pdfSection}</h2>
           </div>
           <div className="pdfControls">
-            <input
-              type="file"
-              accept="application/pdf"
-              multiple
-              onChange={(event) => {
-                const selectedFiles = Array.from(event.target.files ?? []);
-                if (selectedFiles.length > 3) {
-                  setError(text.pdfLimitError);
-                  setPdfFiles(selectedFiles.slice(0, 3));
-                } else {
-                  setError(undefined);
-                  setPdfFiles(selectedFiles);
-                }
-                setPdfInsight(null);
-                setPdfMode(undefined);
-                setSelectedPdfThemeIds([]);
-              }}
-            />
+            <label className="secondaryButton compact fileUploadButton">
+              <FileText size={17} />
+              {text.choosePdfFiles}
+              <input
+                className="hiddenFileInput"
+                type="file"
+                accept="application/pdf"
+                multiple
+                onChange={(event) => {
+                  const selectedFiles = Array.from(event.target.files ?? []);
+                  if (selectedFiles.length > 3) {
+                    setError(text.pdfLimitError);
+                    setPdfFiles(selectedFiles.slice(0, 3));
+                  } else {
+                    setError(undefined);
+                    setPdfFiles(selectedFiles);
+                  }
+                  setPdfInsight(null);
+                  setPdfMode(undefined);
+                  setSelectedPdfThemeIds([]);
+                }}
+              />
+            </label>
             <label className="inlineToggle">
               <input type="checkbox" checked={forcePdfOcr} onChange={(event) => setForcePdfOcr(event.target.checked)} />
               {text.pdfOcr}
@@ -2076,6 +2093,7 @@ export default function Home() {
           </div>
           {pdfFiles.length > 0 && (
             <div className="fileList">
+              <strong>{text.selectedPdfCount}</strong>
               {pdfFiles.map((file) => (
                 <span key={`${file.name}-${file.size}`}>{file.name}</span>
               ))}
