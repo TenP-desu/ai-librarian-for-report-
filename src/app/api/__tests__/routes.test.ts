@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { POST as questionPost } from "@/app/api/librarian-questions/route";
+﻿import { describe, expect, it } from "vitest";
+import { POST as questionPost } from "@/app/api/follow-up-questions/route";
 import { POST as materialPost } from "@/app/api/material-quality/route";
 import { POST as personalizationPost } from "@/app/api/personalization-check/route";
 import { POST as draftPost } from "@/app/api/report-draft/route";
@@ -8,8 +8,8 @@ import { POST as themePost } from "@/app/api/theme-candidates/route";
 import { POST as referencesPost } from "@/app/api/references/route";
 
 describe("API routes", () => {
-  it("rejects invalid librarian question requests", async () => {
-    const response = await questionPost(new Request("http://localhost/api/librarian-questions", {
+  it("rejects invalid follow-up question requests", async () => {
+    const response = await questionPost(new Request("http://localhost/api/follow-up-questions", {
       method: "POST",
       body: JSON.stringify({ topic: "", outputLanguage: "ja" })
     }));

@@ -4,11 +4,11 @@ import Link from "next/link";
 export default function PdfPolicyPage() {
   return (
     <main className="legalPage">
-      <Link className="legalBack" href="/">AI Report Builderに戻る</Link>
+      <Link className="legalBack" href="/">Study Draftに戻る</Link>
       <header className="legalHero">
         <p className="eyebrow">PDF</p>
         <h1>PDFアップロード注意事項</h1>
-        <p>最終更新日: {legalUpdatedAt}</p>
+        <p>最終更新日：{legalUpdatedAt}</p>
       </header>
 
       <section className="legalSection">
@@ -31,7 +31,10 @@ export default function PdfPolicyPage() {
 
       <section className="legalSection">
         <h2>利用上の注意</h2>
-        <p>PDF読み取り結果は要約やテーマ抽出の補助です。根拠として使う前に、PDF本文の該当箇所を自分で確認してください。原文の長文転載は禁止し、引用する場合は授業ルールと引用形式に従ってください。</p>
+        <p>
+          PDF読み取り結果は要約やテーマ抽出の補助です。根拠として使う前に、PDF本文の該当箇所を自分で確認してください。
+          文章の長文転載は避け、引用する場合は授業ルールと引用形式に従ってください。
+        </p>
       </section>
     </main>
   );

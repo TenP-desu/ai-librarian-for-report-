@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { AnalyticsHealthCheck } from "@/components/analytics-health-check";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI Report Builder",
+  title: "Study Draft",
   description: "Bilingual report writing assistant for university students",
   icons: {
     icon: "/app-icon.svg",

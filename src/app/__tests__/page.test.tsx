@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+﻿import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Home from "@/app/page";
@@ -12,7 +12,7 @@ describe("Home", () => {
   it("renders search controls and language switch", () => {
     render(<Home />);
 
-    expect(screen.getByRole("heading", { name: "AI Report Builder" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Study Draft" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Japanese" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "English" })).toBeInTheDocument();
   });
@@ -45,7 +45,7 @@ describe("Home", () => {
                 title: "Evidence point",
                 description: "Use university AI policy as evidence.",
                 type: "evidence",
-                keywordsJa: ["大学", "AI"],
+                keywordsJa: ["螟ｧ蟄ｦ", "AI"],
                 keywordsEn: ["university", "AI"],
                 source: "user"
               }

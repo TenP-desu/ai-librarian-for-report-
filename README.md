@@ -1,6 +1,6 @@
-# AI Report Builder
+﻿# Study Draft
 
-A bilingual AI librarian for university report planning. Students enter a broad idea, answer librarian-style follow-up questions, choose from multiple report plans, and receive verified paper candidates with summaries and APA 7 citations.
+A bilingual report-writing assistant for university students. Students enter a broad idea, answer follow-up questions, choose from multiple report plans, and receive reference candidates with summaries and citation support.
 
 The app includes open guest login. Anyone can enter a name or email and start using it. This is not identity verification; it only separates saved plan history in the browser.
 

@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   AssignmentDetails,
   ContentPoint,
   InterviewAnswer,
@@ -45,7 +45,7 @@ async function generateStructured<T>(prompt: string, schema: JsonSchema): Promis
       text: {
         format: {
           type: "json_schema",
-          name: "ai_librarian_result",
+          name: "study_draft_result",
           schema,
           strict: true
         }
@@ -100,7 +100,7 @@ async function generateStructuredFromContent<T>(
       text: {
         format: {
           type: "json_schema",
-          name: "ai_librarian_result",
+          name: "study_draft_result",
           schema,
           strict: true
         }
@@ -154,7 +154,7 @@ export async function generateLibrarianQuestions(topic: string, outputLanguage: 
   };
 
   const prompt = [
-    "You are a friendly academic librarian interviewing an undergraduate student.",
+    "You are a friendly academic writing assistant interviewing an undergraduate student.",
     "The goal is to turn a vague idea into a concrete report framework before searching papers.",
     "Return 5 or 6 short questions. Include both choice and free-text questions.",
     "At least one question must ask whether the student wants to connect another topic, and a later text question must capture that related topic.",
@@ -199,7 +199,7 @@ export async function generatePdfInsights(
   };
 
   const prompt = [
-    "You are an academic librarian reading a PDF for an undergraduate student.",
+    "You are an academic research assistant reading a PDF for an undergraduate student.",
     "Summarize the document and extract important report-worthy themes.",
     "Themes must be grounded only in the supplied PDF text. Do not invent claims.",
     "If avoid themes are provided, extract different but still important themes where possible.",
@@ -255,7 +255,7 @@ export async function generatePdfInsightsFromPdfFile(
       {
         type: "input_text",
         text: [
-          "You are an academic librarian reading a scanned or image-based PDF for an undergraduate student.",
+          "You are an academic research assistant reading a scanned or image-based PDF for an undergraduate student.",
           "Use OCR/vision over the PDF pages when normal text extraction is not available.",
           "Summarize the document and extract important report-worthy themes grounded only in the PDF.",
           "If avoid themes are provided, extract different but still important themes where possible.",
@@ -305,7 +305,7 @@ export async function generateContentPoints(
   };
 
   const prompt = [
-    "You are an academic librarian helping an undergraduate decide what content to include in a report.",
+    "You are an academic writing assistant helping an undergraduate decide what content to include in a report.",
     "Return 8 to 12 selectable content points. They should be concrete enough to become sections, arguments, evidence, counterarguments, cases, or policy points.",
     "Use the assignment prompt, student's tentative opinion, must-include points, report preferences, material notes, PDF themes, and additional question answers when available.",
     "Treat additional question answers as the newest clarification from the student. Turn them into stronger content points instead of asking the student to add them manually.",
@@ -376,7 +376,7 @@ export async function generateMaterialQualityCheck(
   };
 
   const prompt = [
-    "You are an academic librarian checking whether a student's initial report material is concrete enough to generate strong report plans.",
+    "You are an academic writing assistant checking whether a student's initial report material is concrete enough to generate strong report plans.",
     "Give a material strength score from 0 to 100. Be strict: 90+ requires a clear assignment scope, usable report content, concrete course or PDF material, and a direction suitable for paper search. Do not give 100 unless almost no follow-up is needed.",
     "Ask 3 to 5 high-quality additional questions only where the material is vague. Each question must help fill one missing piece: report scope, stance or comparison axis, evidence needed, course connection, PDF theme selection, or citation/search direction.",
     "Make questions easy to answer in one sentence or a short choice. Avoid generic questions such as 'what do you think?' or questions that repeat the prompt.",
@@ -434,7 +434,7 @@ export async function generateThemeCandidates(
   };
 
   const prompt = [
-    "You are an academic librarian helping undergraduate students narrow report topics.",
+    "You are an academic writing assistant helping undergraduate students narrow report topics.",
     "Return exactly four realistic report plans based on the student's topic and interview answers.",
     "Each plan must use selected content points, make the vague idea more concrete, and include a research question, thesis hint, outline, and bilingual search keywords.",
     "If previous candidates and refinement instructions are provided, improve the plans instead of simply repeating them.",
@@ -506,7 +506,7 @@ export async function generateReportOutline(
   }));
 
   const prompt = [
-    "You are an academic librarian helping a student build a report outline.",
+    "You are an academic writing assistant helping a student build a report outline.",
     "Use the chosen report plan, selected content points, selected PDF themes, and selected verified papers.",
     "Every section should say which selected papers support it using paperIds.",
     languageInstruction(outputLanguage),
@@ -558,7 +558,7 @@ export async function generateReportDraft(
   }));
 
   const prompt = [
-    "You are an academic librarian helping an undergraduate turn a plan into an editable report draft.",
+    "You are an academic writing assistant helping an undergraduate turn a plan into an editable report draft.",
     "Write a draft that the student can revise, not a final submission. Add a note reminding the student to verify full texts and course rules.",
     "Use only the selected verified papers for citations. Do not invent sources, page numbers, quotes, or findings.",
     "Use the supplied in-text citation examples when a selected paper supports a claim, and include the supplied bibliography entries in the selected citation style.",
@@ -630,7 +630,7 @@ export async function generatePersonalizationCheck(
   }));
 
   const prompt = [
-    "You are an academic writing tutor and librarian.",
+    "You are an academic writing tutor and research assistant.",
     "Review the report draft to help the student make it more genuinely their own work.",
     "Do not judge whether it is AI-written and do not provide advice for bypassing AI detection.",
     "Focus on adding the student's opinion, course context, concrete examples, careful use of selected papers, counterarguments, and clearer structure.",
@@ -685,7 +685,7 @@ export async function generateRevisedReportDraft(
   }));
 
   const prompt = [
-    "You are an academic writing tutor and librarian.",
+    "You are an academic writing tutor and research assistant.",
     "Revise the draft according to the selected improvements so it better reflects the student's own argument, course context, evidence choices, examples, and limitations.",
     "Do not provide or optimize for AI-detection evasion. Keep the goal as better academic authorship and revision.",
     "Use only the selected verified papers. Do not invent sources, page numbers, direct quotes, or findings.",

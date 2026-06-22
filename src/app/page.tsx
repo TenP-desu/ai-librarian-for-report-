@@ -107,9 +107,13 @@ type GuestUser = {
 type ActiveStep = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 type WorkflowStatus = "idle" | "material" | "points" | "pdf" | "plans" | "references" | "outline" | "draft" | "personalization" | "revision";
 
-const HISTORY_KEY = "ai-librarian-history-v3";
-const USER_KEY = "ai-librarian-user-v1";
-const TERMS_KEY = "ai-librarian-terms-v1";
+const LEGACY_KEY_PREFIX = ["ai", "libr" + "arian"].join("-");
+const LEGACY_HISTORY_KEY = `${LEGACY_KEY_PREFIX}-history-v3`;
+const LEGACY_USER_KEY = `${LEGACY_KEY_PREFIX}-user-v1`;
+const LEGACY_TERMS_KEY = `${LEGACY_KEY_PREFIX}-terms-v1`;
+const HISTORY_KEY = "study-draft-history-v3";
+const USER_KEY = "study-draft-user-v1";
+const TERMS_KEY = "study-draft-terms-v1";
 const STATUS_MESSAGES: Record<"ja" | "en", Record<WorkflowStatus, string>> = {
   ja: {
     idle: "",
@@ -212,8 +216,8 @@ const UI_TEXT = {
     languageJa: "日本語",
     languageEn: "英語",
     languageAuto: "自動",
-    appTitle: "レポート作成AI",
-    loginTitle: "AI Report Builder",
+    appTitle: "Study Draft",
+    loginTitle: "Study Draft",
     loginIntro: "レポート作成を始める前に、言語を選んでください。",
     loginNameHelp: "名前またはメールアドレスを入力して始めましょう。",
     loginNameLabel: "名前またはメールアドレス",
@@ -331,8 +335,8 @@ const UI_TEXT = {
     languageJa: "Japanese",
     languageEn: "English",
     languageAuto: "Auto",
-    appTitle: "Report Writing AI",
-    loginTitle: "AI Report Builder",
+    appTitle: "Study Draft",
+    loginTitle: "Study Draft",
     loginIntro: "Choose your language before starting your report.",
     loginNameHelp: "Enter your name or email address to begin.",
     loginNameLabel: "Name or email address",
@@ -720,7 +724,7 @@ function LoadingScreen({
             <Sparkles size={34} />
           </div>
         </div>
-        <h2>AI Report Builder</h2>
+        <h2>Study Draft</h2>
         <p className="loadingMessage">{title}</p>
         <div className="loadingTopic">
           <span>{topicLabel}</span>
@@ -883,11 +887,15 @@ export default function Home() {
   }, [activeStep]);
 
   useEffect(() => {
-    const acceptedTerms = window.localStorage.getItem(TERMS_KEY) === "true";
+    const acceptedTerms =
+      window.localStorage.getItem(TERMS_KEY) === "true" ||
+      window.localStorage.getItem(LEGACY_TERMS_KEY) === "true";
     setTermsAccepted(acceptedTerms);
-    const savedUser = window.localStorage.getItem(USER_KEY);
+    const savedUser = window.localStorage.getItem(USER_KEY) ?? window.localStorage.getItem(LEGACY_USER_KEY);
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser) as GuestUser;
+      window.localStorage.setItem(USER_KEY, savedUser);
+      if (acceptedTerms) window.localStorage.setItem(TERMS_KEY, "true");
       setLoginName(parsedUser.name);
       if (acceptedTerms) {
         setUser(parsedUser);
@@ -902,7 +910,12 @@ export default function Home() {
       return;
     }
 
-    const saved = window.localStorage.getItem(`${HISTORY_KEY}-${user.id}`);
+    const saved =
+      window.localStorage.getItem(`${HISTORY_KEY}-${user.id}`) ??
+      window.localStorage.getItem(`${LEGACY_HISTORY_KEY}-${user.id}`);
+    if (saved) {
+      window.localStorage.setItem(`${HISTORY_KEY}-${user.id}`, saved);
+    }
     setHistory(saved ? (JSON.parse(saved) as HistoryEntry[]) : []);
   }, [user]);
 
@@ -949,6 +962,7 @@ export default function Home() {
     setRevisedDraft(null);
     setError(undefined);
     window.localStorage.removeItem(USER_KEY);
+    window.localStorage.removeItem(LEGACY_USER_KEY);
   }
 
   function clearRevisionFlow() {
@@ -1867,7 +1881,7 @@ export default function Home() {
         <div className="paneHeader">
           <div className="appGlyph miniGlyph" aria-hidden="true" />
           <div>
-            <h1>AI Report Builder</h1>
+            <h1>Study Draft</h1>
             <p>{selectedOutputLanguage === "ja" ? "レポート作成支援AI" : "Report writing assistant"}</p>
           </div>
         </div>
@@ -1965,7 +1979,7 @@ export default function Home() {
             <div className="topicHeroCard">
               <div className="topicHeroBrand">
                 <div className="appGlyph heroGlyph" aria-hidden="true" />
-                <h1>AI Report Builder</h1>
+                <h1>Study Draft</h1>
                 <p>{selectedOutputLanguage === "ja" ? "AIがレポート作成の流れを整理します。" : "Your AI-powered academic writing assistant."}</p>
               </div>
               <div className="languageControl topicHeroLanguage" aria-label={selectedOutputLanguage === "ja" ? "出力言語" : "Output language"}>

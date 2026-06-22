@@ -1,4 +1,4 @@
-export async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
+﻿export async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
 
@@ -8,7 +8,7 @@ export async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> 
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        "User-Agent": "ai-librarian-mvp/0.1",
+        "User-Agent": "study-draft/0.1",
         ...init?.headers
       }
     });
@@ -33,7 +33,7 @@ export async function fetchText(url: string, init?: RequestInit): Promise<string
       signal: controller.signal,
       headers: {
         Accept: "application/xml,text/xml,text/html;q=0.9,*/*;q=0.8",
-        "User-Agent": "ai-librarian-mvp/0.1",
+        "User-Agent": "study-draft/0.1",
         ...init?.headers
       }
     });
