@@ -1,4 +1,4 @@
-import { legalUpdatedAt } from "@/lib/legal-content";
+import { contactEmail, legalUpdatedAt } from "@/lib/legal-content";
 import Link from "next/link";
 
 type PageProps = {
@@ -83,20 +83,55 @@ const jaSections = [
     ]
   },
   {
-    title: "第11条 知的財産権",
+    title: "第11条 無料機能、有料機能およびクレジット",
+    body: [
+      "本サービスは、無料機能、有料機能、買い切りクレジット、広告視聴等により付与されるサービス内クレジットを提供する場合があります。",
+      "有料機能、料金、利用可能回数、有効期限、対象機能、消費クレジット数は、本サービス上に表示する内容に従います。",
+      "クレジットは本サービス内でのみ利用でき、現金、電子マネー、暗号資産、ギフト券その他の金銭的価値に交換できません。",
+      "ユーザーは、クレジット、アカウント、利用権を第三者に譲渡、貸与、販売、共有してはなりません。"
+    ]
+  },
+  {
+    title: "第12条 決済および返金",
+    body: [
+      "有料機能を導入する場合、決済はStripe等の外部決済サービスを通じて行う場合があります。",
+      "決済サービスには、当該サービスの利用規約、プライバシーポリシー、手数料、本人確認、支払い方法の制限が適用される場合があります。",
+      "購入後の返金、キャンセル、未使用クレジットの扱いは、本サービス上に別途表示する返金ポリシーまたは購入画面の表示に従います。",
+      "不正利用、規約違反、決済不履行、過度な負荷が確認された場合、Study Draftは有料機能またはクレジットの利用を制限、停止、取り消すことがあります。"
+    ]
+  },
+  {
+    title: "第13条 広告およびリワード広告",
+    body: [
+      "本サービスは、運営費の補助、無料機能の維持、利用者への追加機能提供のため、広告を表示する場合があります。",
+      "通常広告について、ユーザーに広告のクリック、表示、閲覧を不自然に促す行為、またはクリックや表示に対して報酬を提供する行為は行いません。",
+      "リワード広告を導入する場合、ユーザーが任意で広告視聴を選択し、報酬内容を確認したうえで利用できる形とします。",
+      "リワード広告による報酬は、本サービス内で利用できる限定的なクレジットまたは追加利用回数とし、現金その他の金銭的価値には交換できません。",
+      "広告を視聴しない場合でも、通常の処理または無料枠の範囲で本サービスを利用できるよう努めます。"
+    ]
+  },
+  {
+    title: "第14条 利用制限",
+    body: [
+      "Study Draftは、無料枠、有料枠、広告報酬、API利用量、セキュリティ、運営上の理由により、利用回数、生成量、PDF処理量、参考文献検索回数、保存件数等に制限を設ける場合があります。",
+      "制限の内容は、機能改善、外部APIの仕様変更、費用、負荷状況、不正利用対策等により変更される場合があります。"
+    ]
+  },
+  {
+    title: "第15条 知的財産権",
     body: [
       "本サービスの画面、プログラム、デザイン、ロゴ、文章、機能、その他本サービスに関する知的財産権は、Study Draftまたは正当な権利者に帰属します。",
       "ユーザーは、Study Draftの許可なく、本サービスの内容を複製、転載、販売、再配布、改変、解析してはなりません。"
     ]
   },
   {
-    title: "第12条 サービスの変更・停止",
+    title: "第16条 サービスの変更・停止",
     body: [
       "Study Draftは、機能改善、保守、障害対応、外部APIの仕様変更、セキュリティ対応、運営上の理由により、本サービスの全部または一部を変更、停止、終了することがあります。"
     ]
   },
   {
-    title: "第13条 保証の否認・免責",
+    title: "第17条 保証の否認・免責",
     body: [
       "本サービスは現状有姿で提供され、正確性、完全性、有用性、特定目的への適合性、継続的な提供、エラーがないことを保証しません。",
       "Study Draftは、AI出力、参考文献候補、PDF要約、引用形式、ページ番号、下書き内容が正確であることを保証しません。",
@@ -104,22 +139,22 @@ const jaSections = [
     ]
   },
   {
-    title: "第14条 規約の変更",
+    title: "第18条 規約の変更",
     body: [
       "Study Draftは、必要に応じて本規約を変更できます。重要な変更がある場合は、本サービス上で通知します。",
       "変更後にユーザーが本サービスを利用した場合、変更後の規約に同意したものとみなします。"
     ]
   },
   {
-    title: "第15条 準拠法・管轄",
+    title: "第19条 準拠法・管轄",
     body: [
       "本規約は日本法に準拠します。本サービスに関して紛争が生じた場合、日本の裁判所を管轄裁判所とします。"
     ]
   },
   {
-    title: "第16条 問い合わせ",
+    title: "第20条 問い合わせ",
     body: [
-      "問い合わせ窓口は、今後本サービス上に設置する予定です。現時点では、個別の問い合わせ先は設置していません。"
+      `本サービスに関する問い合わせは、${contactEmail} までご連絡ください。`
     ]
   }
 ];
@@ -202,20 +237,55 @@ const enSections = [
     ]
   },
   {
-    title: "Article 11. Intellectual Property",
+    title: "Article 11. Free Features, Paid Features, and Credits",
+    body: [
+      "The Service may provide free features, paid features, one-time purchase credits, and in-service credits granted through advertising or other methods.",
+      "Paid features, prices, available usage counts, expiration periods, eligible features, and credit consumption are governed by what is shown in the Service.",
+      "Credits can be used only within the Service and cannot be exchanged for cash, electronic money, crypto assets, gift cards, or any other monetary value.",
+      "Users must not transfer, lend, sell, or share credits, accounts, or usage rights with third parties."
+    ]
+  },
+  {
+    title: "Article 12. Payments and Refunds",
+    body: [
+      "If paid features are introduced, payments may be processed through external payment services such as Stripe.",
+      "The payment service's own terms, privacy policy, fees, identity verification requirements, and payment method limitations may apply.",
+      "Refunds, cancellations, and unused credits after purchase are governed by the refund policy or purchase screen displayed separately in the Service.",
+      "If fraud, violation of these Terms, payment failure, or excessive load is identified, Study Draft may restrict, suspend, or revoke access to paid features or credits."
+    ]
+  },
+  {
+    title: "Article 13. Advertising and Rewarded Ads",
+    body: [
+      "The Service may display advertisements to support operating costs, maintain free features, and provide additional features to users.",
+      "For ordinary advertisements, the Service does not unnaturally encourage users to click, view, or display ads, and does not provide rewards for clicks or impressions.",
+      "If rewarded ads are introduced, users may choose to view them voluntarily after confirming the reward details.",
+      "Rewards from rewarded ads are limited to in-service credits or additional usage counts and cannot be exchanged for cash or any other monetary value.",
+      "The Service will work to allow users to continue using ordinary processing or free features even if they do not view an ad."
+    ]
+  },
+  {
+    title: "Article 14. Usage Limits",
+    body: [
+      "Study Draft may set limits on usage counts, generation volume, PDF processing volume, reference searches, saved items, and other usage based on free tiers, paid tiers, advertising rewards, API usage, security, and operational reasons.",
+      "Limits may change due to feature improvements, external API changes, costs, load conditions, or abuse prevention."
+    ]
+  },
+  {
+    title: "Article 15. Intellectual Property",
     body: [
       "Intellectual property rights related to the Service, including screens, programs, designs, logos, text, and functions, belong to Study Draft or lawful rights holders.",
       "Users must not copy, reproduce, sell, redistribute, modify, or analyze the Service without permission from Study Draft."
     ]
   },
   {
-    title: "Article 12. Changes or Suspension",
+    title: "Article 16. Changes or Suspension",
     body: [
       "Study Draft may change, suspend, or terminate all or part of the Service for improvements, maintenance, system failures, external API changes, security response, or operational reasons."
     ]
   },
   {
-    title: "Article 13. Disclaimer",
+    title: "Article 17. Disclaimer",
     body: [
       "The Service is provided as-is and does not guarantee accuracy, completeness, usefulness, fitness for a particular purpose, continuous availability, or error-free operation.",
       "Study Draft does not guarantee the accuracy of AI outputs, reference candidates, PDF summaries, citation styles, page numbers, or draft content.",
@@ -223,22 +293,22 @@ const enSections = [
     ]
   },
   {
-    title: "Article 14. Changes to Terms",
+    title: "Article 18. Changes to Terms",
     body: [
       "Study Draft may change these Terms as necessary. Important changes will be announced in the Service.",
       "If a user continues using the Service after changes, the user is deemed to have agreed to the updated Terms."
     ]
   },
   {
-    title: "Article 15. Governing Law and Jurisdiction",
+    title: "Article 19. Governing Law and Jurisdiction",
     body: [
       "These Terms are governed by the laws of Japan. Any dispute relating to the Service will be subject to the jurisdiction of the courts of Japan."
     ]
   },
   {
-    title: "Article 16. Contact",
+    title: "Article 20. Contact",
     body: [
-      "A contact channel will be provided in the Service in the future. At present, no individual contact address is available."
+      `For inquiries about the Service, contact ${contactEmail}.`
     ]
   }
 ];

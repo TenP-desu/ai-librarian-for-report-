@@ -5,6 +5,8 @@ export const legalLinks = [
 
 export const legalUpdatedAt = "2026-06-23";
 
+export const contactEmail = "studydraft.help@gmail.com";
+
 export const safetyPrinciples = [
   "Study Draftはレポート作成の補助ツールであり、提出代行や剽窃支援を目的としません。",
   "ユーザーは大学、授業、教員のAI利用ルールを確認し、それに従う必要があります。",

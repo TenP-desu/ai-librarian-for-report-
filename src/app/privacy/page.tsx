@@ -1,4 +1,4 @@
-import { legalUpdatedAt } from "@/lib/legal-content";
+import { contactEmail, legalUpdatedAt } from "@/lib/legal-content";
 import Link from "next/link";
 
 type PageProps = {
@@ -67,7 +67,9 @@ const jaSections = [
     title: "第9条 Cookie・Analytics",
     body: [
       "本サービスは、利用状況の把握、機能改善、不具合調査のため、Cookieまたは類似技術、Vercel Analytics等を利用する場合があります。",
-      "広告を導入する場合、広告配信に関するCookieや第三者広告サービスの利用について、本ポリシーまたは本サービス上で説明します。"
+      "広告を導入する場合、Google AdSense、Google Ad Managerその他の第三者広告サービスが、広告配信、広告効果測定、不正防止、パーソナライズ広告または非パーソナライズ広告のためにCookieまたは類似技術を利用する場合があります。",
+      "ユーザーは、Googleの広告設定等を通じてパーソナライズ広告を管理できる場合があります。",
+      "本サービスは、広告、Analytics、利用状況分析に、レポート本文、PDF本文、テーマ文、参考文献タイトルなどの内容そのものを送信しない設計に努めます。"
     ]
   },
   {
@@ -86,8 +88,8 @@ const jaSections = [
   {
     title: "第12条 開示・訂正・削除等",
     body: [
-      "ユーザーが個人情報の開示、訂正、削除、利用停止等を希望する場合、今後本サービス上に設置する問い合わせ窓口を通じて連絡できるようにする予定です。",
-      "現時点では、個別の問い合わせ先は設置していません。"
+      `ユーザーが個人情報の開示、訂正、削除、利用停止等を希望する場合、${contactEmail} までご連絡ください。`,
+      "本人確認や対象情報の確認のため、必要な範囲で追加情報の提供をお願いする場合があります。"
     ]
   },
   {
@@ -160,7 +162,9 @@ const enSections = [
     title: "Article 9. Cookies and Analytics",
     body: [
       "The Service may use cookies or similar technologies and Vercel Analytics to understand usage, improve features, and investigate issues.",
-      "If advertising is introduced, the Service will explain advertising cookies and third-party advertising services in this Policy or in the Service."
+      "If advertising is introduced, Google AdSense, Google Ad Manager, or other third-party advertising services may use cookies or similar technologies for ad delivery, ad measurement, abuse prevention, and personalized or non-personalized ads.",
+      "Users may be able to manage personalized ads through Google's ad settings or similar controls.",
+      "The Service works to avoid sending report text, PDF text, theme text, reference titles, or similar content itself to advertising, analytics, or usage analysis tools."
     ]
   },
   {
@@ -179,8 +183,8 @@ const enSections = [
   {
     title: "Article 12. Disclosure, Correction, and Deletion",
     body: [
-      "If users wish to request disclosure, correction, deletion, or suspension of use of their personal information, they may contact the Service through a contact channel to be provided in the future.",
-      "At present, no individual contact address is available."
+      `If users wish to request disclosure, correction, deletion, or suspension of use of their personal information, contact ${contactEmail}.`,
+      "Additional information may be requested as necessary to verify the requester and identify the relevant information."
     ]
   },
   {
