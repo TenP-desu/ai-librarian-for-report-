@@ -302,6 +302,13 @@ const UI_TEXT = {
     copiedCitationOnly: "引用だけコピーしました",
     copiedSelectedCitations: "選択中の引用をコピーしました",
     copiedSelectedSummaries: "選択中の要約をコピーしました",
+    outlineError: "構成案を作成できませんでした。材料を少し減らしてもう一度試してください。",
+    draftError: "下書きを作成できませんでした。材料を少し減らしてもう一度試してください。",
+    draftRequiredError: "先に下書きを作成してください。",
+    personalizationError: "改善ポイントを確認できませんでした。もう一度試してください。",
+    personalizationRequiredError: "先に改善ポイントを確認してください。",
+    revisionSelectionError: "改善ポイントを1つ以上選ぶか、その他の直したい点を書いてください。",
+    revisionError: "改訂版を作成できませんでした。もう一度試してください。",
     selectedCitations: "選択中の引用をまとめてコピー",
     selectedSummaries: "要約と使いどころをコピー",
     citationOnly: "引用だけコピー",
@@ -326,6 +333,39 @@ const UI_TEXT = {
     useThisPaper: "この論文を使う",
     openPaper: "論文ページを開く"
     ,
+    draftStepAria: "構成案",
+    draftStepTitle: "6. 構成案・下書きを作る",
+    selectedPaperCount: "件の論文を選択中",
+    pdfFocused: "PDF中心",
+    contentPointFocused: "内容候補中心",
+    createOutline: "構成案を作る",
+    pdfOnlyOutlineNotice: "PDFの内容だけで構成案を作ります。論文引用を入れる場合は、参考文献を選んでください。",
+    outlinePaperIds: "使う論文",
+    draftCreateTitle: "下書き作成",
+    targetWordCount: "目標語数",
+    languageLevel: "文章レベル",
+    levelHigh: "高め",
+    levelMiddle: "標準",
+    levelLow: "やさしめ",
+    writingStyle: "文体",
+    styleStandard: "標準",
+    styleAcademic: "学術寄り",
+    humanLikeDraft: "自然な文章にする",
+    otherConditions: "その他の条件",
+    createDraft: "下書きを作る",
+    approxWordCount: "約",
+    wordUnit: "語",
+    bibliography: "参考文献",
+    copyDraft: "下書きをコピー",
+    copiedDraft: "下書きをコピーしました",
+    personalizeTitle: "自分らしく直す",
+    checkImprovements: "改善ポイントを確認",
+    otherImprovements: "その他の直したい点",
+    createRevision: "改訂版を作る",
+    revisedPrefix: "改訂版",
+    improvementsApplied: "件の改善を反映",
+    copyRevision: "改訂版をコピー",
+    copiedRevision: "改訂版をコピーしました",
     draftFeedbackQuestion: "この下書きは役に立ちましたか？",
     draftFeedbackGood: "役に立った",
     draftFeedbackNeedsWork: "改善が必要",
@@ -421,6 +461,13 @@ const UI_TEXT = {
     copiedCitationOnly: "Copied citation",
     copiedSelectedCitations: "Copied selected citations",
     copiedSelectedSummaries: "Copied selected summaries",
+    outlineError: "Could not create the outline. Reduce the material a little and try again.",
+    draftError: "Could not create the draft. Reduce the material a little and try again.",
+    draftRequiredError: "Create a draft first.",
+    personalizationError: "Could not check improvement points. Please try again.",
+    personalizationRequiredError: "Check improvement points first.",
+    revisionSelectionError: "Select at least one improvement point or write another point to revise.",
+    revisionError: "Could not create the revised draft. Please try again.",
     selectedCitations: "Copy selected citations",
     selectedSummaries: "Copy summaries and use notes",
     citationOnly: "Copy citation only",
@@ -445,6 +492,39 @@ const UI_TEXT = {
     useThisPaper: "Use this paper",
     openPaper: "Open paper page"
     ,
+    draftStepAria: "Outline and draft",
+    draftStepTitle: "6. Create an outline and draft",
+    selectedPaperCount: " papers selected",
+    pdfFocused: "PDF-focused",
+    contentPointFocused: "Content-point focused",
+    createOutline: "Create outline",
+    pdfOnlyOutlineNotice: "The outline will use PDF material only. Select references if you want paper citations.",
+    outlinePaperIds: "Papers to use",
+    draftCreateTitle: "Draft settings",
+    targetWordCount: "Target words",
+    languageLevel: "Language level",
+    levelHigh: "Advanced",
+    levelMiddle: "Standard",
+    levelLow: "Plain",
+    writingStyle: "Writing style",
+    styleStandard: "Standard",
+    styleAcademic: "Academic",
+    humanLikeDraft: "Make the draft sound natural",
+    otherConditions: "Other conditions",
+    createDraft: "Create draft",
+    approxWordCount: "Approx.",
+    wordUnit: "words",
+    bibliography: "References",
+    copyDraft: "Copy draft",
+    copiedDraft: "Draft copied",
+    personalizeTitle: "Revise in your own voice",
+    checkImprovements: "Check improvement points",
+    otherImprovements: "Other points to revise",
+    createRevision: "Create revised draft",
+    revisedPrefix: "Revised draft",
+    improvementsApplied: " improvements applied",
+    copyRevision: "Copy revised draft",
+    copiedRevision: "Revised draft copied",
     draftFeedbackQuestion: "Was this draft useful?",
     draftFeedbackGood: "Useful",
     draftFeedbackNeedsWork: "Needs work",
@@ -787,6 +867,7 @@ export default function Home() {
     humanLike: true,
     otherConditions: ""
   });
+  const [draftWordCountInput, setDraftWordCountInput] = useState("1200");
   const [reportDraft, setReportDraft] = useState<ReportDraft | null>(null);
   const [personalizationCheck, setPersonalizationCheck] = useState<PersonalizationCheck | null>(null);
   const [selectedImprovementIds, setSelectedImprovementIds] = useState<string[]>([]);
@@ -1576,7 +1657,7 @@ export default function Home() {
         usedFallback: result.usedFallback
       });
     } catch {
-      setError("構成案を作成できませんでした。材料を少し減らしてもう一度試してください。");
+      setError(text.outlineError);
     } finally {
       setStatus("idle");
     }
@@ -1629,7 +1710,7 @@ export default function Home() {
         usedFallback: result.usedFallback
       });
     } catch {
-      setError("下書きを作成できませんでした。材料を少し減らしてもう一度試してください。");
+      setError(text.draftError);
     } finally {
       setStatus("idle");
     }
@@ -1637,7 +1718,7 @@ export default function Home() {
 
   async function checkPersonalization() {
     if (!selectedPlan || !reportDraft) {
-      setError("先に下書きを作成してください。");
+      setError(text.draftRequiredError);
       return;
     }
 
@@ -1676,7 +1757,7 @@ export default function Home() {
         usedFallback: result.usedFallback
       });
     } catch {
-      setError("改善ポイントを確認できませんでした。もう一度試してください。");
+      setError(text.personalizationError);
     } finally {
       setStatus("idle");
     }
@@ -1684,7 +1765,7 @@ export default function Home() {
 
   async function createRevision() {
     if (!selectedPlan || !reportDraft || !personalizationCheck) {
-      setError("先に改善ポイントを確認してください。");
+      setError(text.personalizationRequiredError);
       return;
     }
 
@@ -1712,7 +1793,7 @@ export default function Home() {
           : [];
 
     if (improvementsForRequest.length === 0) {
-      setError("改善ポイントを1つ以上選ぶか、その他の直したい点を書いてください。");
+      setError(text.revisionSelectionError);
       return;
     }
 
@@ -1748,7 +1829,7 @@ export default function Home() {
         usedFallback: result.usedFallback
       });
     } catch {
-      setError("改訂版を作成できませんでした。もう一度試してください。");
+      setError(text.revisionError);
     } finally {
       setStatus("idle");
     }
@@ -2541,17 +2622,17 @@ export default function Home() {
         )}
 
         {activeStep === 6 && selectedPlan && (references.length > 0 || selectedPdfThemes().length > 0 || selectedContentPoints().length > 0) && (
-          <section className="outlinePane stepPage" aria-label="構成案">
+          <section className="outlinePane stepPage" aria-label={text.draftStepAria}>
             <div className="sectionHeader">
               <ListChecks size={18} />
-              <h2>6. 構成案・下書きを作る</h2>
+              <h2>{text.draftStepTitle}</h2>
               <span className="selectedChip">
-                {selectedReferenceIds.length > 0 ? `${selectedReferenceIds.length}件の論文を選択中` : selectedPdfThemes().length > 0 ? "PDF中心" : "内容候補中心"}
+                {selectedReferenceIds.length > 0 ? `${selectedReferenceIds.length}${text.selectedPaperCount}` : selectedPdfThemes().length > 0 ? text.pdfFocused : text.contentPointFocused}
               </span>
             </div>
             <button className="primaryButton" type="button" onClick={createOutline} disabled={busy || (selectedReferenceIds.length === 0 && selectedPdfThemes().length === 0 && selectedContentPoints().length === 0)}>
               {status === "outline" ? <Loader2 size={18} className="spin" /> : <CheckCircle2 size={18} />}
-              構成案を作る
+              {text.createOutline}
             </button>
             <div className="notice safetyNotice">
               <p>{text.draftSafetyNotice}</p>
@@ -2571,7 +2652,7 @@ export default function Home() {
             </div>
             {selectedReferenceIds.length === 0 && selectedPdfThemes().length > 0 && (
               <div className="notice">
-                <p>PDFの内容だけで構成案を作ります。論文引用を入れる場合は、参考文献を選んでください。</p>
+                <p>{text.pdfOnlyOutlineNotice}</p>
               </div>
             )}
             {reportOutline && (
@@ -2587,7 +2668,7 @@ export default function Home() {
                         <li key={point}>{renderMathText(point)}</li>
                       ))}
                     </ul>
-                    {section.paperIds.length > 0 && <small>使う論文: {section.paperIds.join(", ")}</small>}
+                    {section.paperIds.length > 0 && <small>{text.outlinePaperIds}: {section.paperIds.join(", ")}</small>}
                   </section>
                 ))}
                 <div className="notice">
@@ -2601,42 +2682,53 @@ export default function Home() {
             <div className="draftBox">
               <div className="sectionHeader compactHeader">
                 <PenLine size={18} />
-                <h3>下書き作成</h3>
+                <h3>{text.draftCreateTitle}</h3>
               </div>
               <div className="draftControls">
                 <label>
-                  <span>目標語数</span>
+                  <span>{text.targetWordCount}</span>
                   <input
-                    type="text"
-                    inputMode="numeric"
-                    value={draftOptions.targetWordCount}
+                    type="number"
+                    min={100}
+                    step={100}
+                    value={draftWordCountInput}
                     onChange={(event) => {
-                      const wordCount = Number(event.target.value.replace(/[^\d]/g, ""));
-                      setDraftOptions({ ...draftOptions, targetWordCount: wordCount || draftOptions.targetWordCount });
+                      const digits = event.target.value.replace(/[^\d]/g, "");
+                      setDraftWordCountInput(digits);
+                      const wordCount = Number(digits);
+                      if (wordCount > 0) {
+                        setDraftOptions({ ...draftOptions, targetWordCount: wordCount });
+                      }
+                    }}
+                    onBlur={() => {
+                      const wordCount = Number(draftWordCountInput);
+                      const normalizedWordCount = wordCount >= 100 ? wordCount : 100;
+                      setDraftWordCountInput(String(normalizedWordCount));
+                      setDraftOptions({ ...draftOptions, targetWordCount: normalizedWordCount });
                     }}
                   />
                 </label>
                 <label>
-                  <span>文章レベル</span>
+                  <span>{text.languageLevel}</span>
                   <select value={draftOptions.languageLevel} onChange={(event) => setDraftOptions({ ...draftOptions, languageLevel: event.target.value as ReportDraftOptions["languageLevel"] })}>
-                    <option value="high">高め</option>
-                    <option value="middle">標準</option>
-                    <option value="low">やさしめ</option>
+                    <option value="high">{text.levelHigh}</option>
+                    <option value="middle">{text.levelMiddle}</option>
+                    <option value="low">{text.levelLow}</option>
                   </select>
                 </label>
                 <label>
-                  <span>文体</span>
+                  <span>{text.writingStyle}</span>
                   <select value={draftOptions.writingStyle} onChange={(event) => setDraftOptions({ ...draftOptions, writingStyle: event.target.value as ReportDraftOptions["writingStyle"] })}>
-                    <option value="standard">標準</option>
-                    <option value="academic">学術寄り</option>
+                    <option value="standard">{text.styleStandard}</option>
+                    <option value="academic">{text.styleAcademic}</option>
                   </select>
                 </label>
                 <label className="inlineToggle draftToggle">
                   <input type="checkbox" checked={draftOptions.humanLike} onChange={(event) => setDraftOptions({ ...draftOptions, humanLike: event.target.checked })} />
-                  自然な文章にする
+                  {text.humanLikeDraft}
                 </label>
                 <label className="wideCondition">
-                  <span>その他の条件</span>
+                  <span>{text.otherConditions}</span>
                   <textarea
                     value={draftOptions.otherConditions}
                     onChange={(event) => setDraftOptions({ ...draftOptions, otherConditions: event.target.value })}
@@ -2646,7 +2738,7 @@ export default function Home() {
               </div>
               <button className="primaryButton" type="button" onClick={createDraft} disabled={busy || (selectedReferenceIds.length === 0 && selectedPdfThemes().length === 0 && selectedContentPoints().length === 0)}>
                 {status === "draft" ? <Loader2 size={18} className="spin" /> : <PenLine size={18} />}
-                下書きを作る
+                {text.createDraft}
               </button>
               {reportDraft && (
                 <article className="draftResult">
@@ -2654,15 +2746,15 @@ export default function Home() {
                     <div>
                       <h3>{reportDraft.title}</h3>
                       <small>
-                        約 {reportDraft.wordCountEstimate} 語 / {reportDraft.languageLevel}
+                        {text.approxWordCount} {reportDraft.wordCountEstimate} {text.wordUnit} / {reportDraft.languageLevel}
                       </small>
                     </div>
                     <button
                       className="iconButton"
                       type="button"
-                      onClick={() => copyToClipboard([reportDraft.title, reportDraft.draft, "参考文献", ...currentBibliographyItems(reportDraft.bibliography)].join("\n\n"), "下書きをコピーしました")}
-                      aria-label="下書きをコピー"
-                      title="下書きをコピー"
+                      onClick={() => copyToClipboard([reportDraft.title, reportDraft.draft, text.bibliography, ...currentBibliographyItems(reportDraft.bibliography)].join("\n\n"), text.copiedDraft)}
+                      aria-label={text.copyDraft}
+                      title={text.copyDraft}
                     >
                       <Clipboard size={16} />
                     </button>
@@ -2711,18 +2803,18 @@ export default function Home() {
                       {text.draftFeedbackNeedsWork}
                     </button>
                   </div>
-                  <h4>参考文献</h4>
+                  <h4>{text.bibliography}</h4>
                   {currentBibliographyItems(reportDraft.bibliography).map((item) => (
                     <code key={item}>{item}</code>
                   ))}
                   <div className="personalizationBox">
                     <div className="sectionHeader compactHeader">
                       <ListChecks size={18} />
-                      <h3>自分らしく直す</h3>
+                      <h3>{text.personalizeTitle}</h3>
                     </div>
                     <button className="secondaryButton" type="button" onClick={checkPersonalization} disabled={busy}>
                       {status === "personalization" ? <Loader2 size={18} className="spin" /> : <CheckCircle2 size={18} />}
-                      改善ポイントを確認
+                      {text.checkImprovements}
                     </button>
                     {personalizationCheck && (
                       <div className="improvementPanel">
@@ -2740,7 +2832,7 @@ export default function Home() {
                           ))}
                         </div>
                         <label className="otherImprovement">
-                          <span>その他の直したい点</span>
+                          <span>{text.otherImprovements}</span>
                           <textarea
                             value={otherImprovement}
                             onChange={(event) => {
@@ -2752,7 +2844,7 @@ export default function Home() {
                         </label>
                         <button className="primaryButton" type="button" onClick={createRevision} disabled={busy}>
                           {status === "revision" ? <Loader2 size={18} className="spin" /> : <PenLine size={18} />}
-                          改訂版を作る
+                          {text.createRevision}
                         </button>
                       </div>
                     )}
@@ -2760,17 +2852,17 @@ export default function Home() {
                       <article className="revisedResult">
                         <div className="draftTopline">
                           <div>
-                            <h3>改訂版: {revisedDraft.title}</h3>
+                            <h3>{text.revisedPrefix}: {revisedDraft.title}</h3>
                             <small>
-                              約 {revisedDraft.wordCountEstimate} 語 / {revisedDraft.appliedImprovementIds.length}件の改善を反映
+                              {text.approxWordCount} {revisedDraft.wordCountEstimate} {text.wordUnit} / {revisedDraft.appliedImprovementIds.length}{text.improvementsApplied}
                             </small>
                           </div>
                           <button
                             className="iconButton"
                             type="button"
-                            onClick={() => copyToClipboard([revisedDraft.title, revisedDraft.draft, "参考文献", ...revisedDraft.bibliography].join("\n\n"), "改訂版をコピーしました")}
-                            aria-label="改訂版をコピー"
-                            title="改訂版をコピー"
+                            onClick={() => copyToClipboard([revisedDraft.title, revisedDraft.draft, text.bibliography, ...revisedDraft.bibliography].join("\n\n"), text.copiedRevision)}
+                            aria-label={text.copyRevision}
+                            title={text.copyRevision}
                           >
                             <Clipboard size={16} />
                           </button>
@@ -2781,7 +2873,7 @@ export default function Home() {
                             <p key={note}>{note}</p>
                           ))}
                         </div>
-                        <h4>参考文献</h4>
+                        <h4>{text.bibliography}</h4>
                         {revisedDraft.bibliography.map((item) => (
                           <code key={item}>{item}</code>
                         ))}
